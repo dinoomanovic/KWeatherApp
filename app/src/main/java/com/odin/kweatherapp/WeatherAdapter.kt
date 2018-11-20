@@ -11,11 +11,11 @@ import android.widget.TextView
 import com.odin.kweatherapp.Models.WeatherData
 import java.util.ArrayList
 
-class WeatherAdapter(context: Context?, resource: Int, objects: ArrayList<out WeatherData>?) : ArrayAdapter<WeatherData>(context, resource, objects) {
-    private var listData: ArrayList<out WeatherData>? = objects
+class WeatherAdapter(context: Context?, resource: Int, objects: ArrayList<WeatherData?>) : ArrayAdapter<WeatherData>(context, resource, objects) {
+    private var listData: ArrayList<WeatherData?> = objects
 
-    override fun getItem(position: Int): WeatherData {
-        return listData!!.get(position)
+    override fun getItem(position: Int): WeatherData? {
+        return listData.get(position)
     }
 
     override fun getItemId(position: Int): Long {
@@ -23,7 +23,7 @@ class WeatherAdapter(context: Context?, resource: Int, objects: ArrayList<out We
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var holder : ViewHolder = ViewHolder()
+        var holder = ViewHolder()
         var view : View? = convertView
         if(convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.weather_layout, parent, false)
@@ -35,12 +35,12 @@ class WeatherAdapter(context: Context?, resource: Int, objects: ArrayList<out We
         }
         else
             holder =  view?.getTag() as ViewHolder
-            var weather : WeatherData = listData!!.get(position)
-            holder.cityName?.setText(weather.city.name)
-            holder.temp?.setText(Math.round(weather.list[0].main.temp).toString() + " °C")
-            holder.dayTemp?.setText(weather.list[0].weather[0].description)
+            val weather : WeatherData? = listData.get(position)
+            holder.cityName?.setText(weather?.city?.name)
+            holder.temp?.setText(Math.round(weather?.list!![0].main.temp).toString() + " °C")
+            holder.dayTemp?.setText(weather?.list!![0].weather[0].description)
             val img = ContextCompat.getDrawable(view?.getContext(),
-                getIcon(weather.list[0].weather[0].icon))
+                getIcon(weather?.list?.get(0)?.weather?.get(0)?.icon!!))
             holder.icon?.setImageDrawable(img)
         return view!!
     }

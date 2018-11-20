@@ -1,8 +1,8 @@
 package com.odin.kweatherapp.Utils
 
 import okhttp3.OkHttpClient
-import retrofit2.GsonConverterFactory
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class WeatherRestAdapter {
     private val BASE_URL = "http://api.openweathermap.org"

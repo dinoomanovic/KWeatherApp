@@ -19,19 +19,19 @@ import java.util.ArrayList
 
 class DetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var weatherView : View? = inflater?.inflate(R.layout.detail_fragment, container, false)
+        val weatherView : View? = inflater?.inflate(R.layout.detail_fragment, container, false)
         val cityPreferences = CityPreferences(activity)
-        var weatherArrayList = ArrayList<WeatherData>()
-        var weatherList : ListView = weatherView?.findViewById(R.id.detailList) as ListView
-        var weatherAdapter: DetailAdapter = DetailAdapter(activity, R.layout.detail_layout, weatherArrayList)
-        var progressBar: ProgressBar = weatherView?.findViewById(R.id.detailProgressBar) as ProgressBar
+        val weatherArrayList = ArrayList<WeatherData?>()
+        val weatherList : ListView = weatherView?.findViewById(R.id.detailList) as ListView
+        var weatherAdapter: DetailAdapter
+        val progressBar: ProgressBar = weatherView?.findViewById(R.id.detailProgressBar) as ProgressBar
         progressBar.visibility = View.VISIBLE
-        var adapter : WeatherRestAdapter = WeatherRestAdapter()
-        var client : WeatherApi = adapter.createService()
-        var call : Call<WeatherData> = client.getWeather(cityPreferences.getCity(), WeatherConstants.APPID, WeatherConstants.METRIC)
+        val adapter = WeatherRestAdapter()
+        val client : WeatherApi = adapter.createService()
+        val call : Call<WeatherData> = client.getWeather(cityPreferences.getCity(), WeatherConstants.APPID, WeatherConstants.METRIC)
         call.enqueue(object : Callback<WeatherData> {
             override fun onResponse(call: Call<WeatherData>, response: Response<WeatherData>) {
-                val weatherData: WeatherData = response.body()
+                val weatherData: WeatherData? = response.body()
                 weatherArrayList.add(weatherData)
                 weatherAdapter = DetailAdapter(activity, R.id.detailList, weatherArrayList)
                 weatherAdapter.notifyDataSetChanged()

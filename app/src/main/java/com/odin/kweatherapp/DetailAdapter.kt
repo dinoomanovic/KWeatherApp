@@ -13,11 +13,11 @@ import com.odin.kweatherapp.Models.WeatherData
 
 import java.util.ArrayList
 
-class DetailAdapter(context: Context?, resource: Int, objects: ArrayList<out WeatherData>?) : ArrayAdapter<WeatherData>(context, resource, objects) {
-    private var listData : ArrayList<out WeatherData>? = objects
+class DetailAdapter(context: Context?, resource: Int, objects: ArrayList<WeatherData?>) : ArrayAdapter<WeatherData>(context, resource, objects) {
+    private var listData : ArrayList<WeatherData?> = objects
 
-    override fun getItem(position: Int): WeatherData {
-        return listData!!.get(position)
+    override fun getItem(position: Int): WeatherData? {
+        return listData.get(position)
     }
 
     override fun getItemId(position: Int): Long {
@@ -25,7 +25,7 @@ class DetailAdapter(context: Context?, resource: Int, objects: ArrayList<out Wea
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var holder : ViewHolder = ViewHolder()
+        var holder = ViewHolder()
         var view : View? = convertView
         if(convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.detail_layout, parent, false)
@@ -43,7 +43,7 @@ class DetailAdapter(context: Context?, resource: Int, objects: ArrayList<out Wea
         }
         else
         holder =  view?.getTag() as ViewHolder
-        var weather : WeatherData = listData!!.get(position)
+        val weather : WeatherData = listData.get(position)!!
         holder.detailText?.setSelected(true)
         holder.detailText?.setEllipsize(TextUtils.TruncateAt.MARQUEE)
         holder.detailText?.setSingleLine(true)
@@ -76,7 +76,7 @@ class DetailAdapter(context: Context?, resource: Int, objects: ArrayList<out Wea
     }
 
     override fun getCount(): Int {
-        return listData!!.size
+        return listData.size
     }
 
     private fun getIcon(iconName: String): Int {

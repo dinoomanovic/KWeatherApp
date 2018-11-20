@@ -46,9 +46,9 @@ class MainActivity : AppCompatActivity() {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.putExtra("flag", "add")
         } catch (e: GooglePlayServicesRepairableException) {
-            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG)
+            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG).show()
         } catch (e: GooglePlayServicesNotAvailableException) {
-            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG)
+            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG).show()
             // TODO: Handle the error.
         }
     }
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
-                Toast.makeText(this@MainActivity, "User canceled operation", Toast.LENGTH_LONG)
+                Toast.makeText(this@MainActivity, "User canceled operation", Toast.LENGTH_LONG).show()
             }
         }
     }
