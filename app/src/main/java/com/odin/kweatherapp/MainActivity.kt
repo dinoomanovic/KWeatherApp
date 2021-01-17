@@ -2,69 +2,108 @@ package com.odin.kweatherapp
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.location.places.ui.PlaceAutocomplete
-import com.odin.kweatherapp.Models.CityPreferences
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.odin.kweatherapp.models.CityPreferences
+import com.odin.kweatherapp.ui.WeatherDetailsFragment
+import com.odin.kweatherapp.ui.WeatherFragment
+import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity() {
+    private var startForResult: ActivityResultLauncher<Intent>? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        return super.onCreateOptionsMenu(menu)    }
+        return super.onCreateOptionsMenu(menu)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.getItemId() == R.id.action_settings) {
-            findPlace(window.decorView.rootView.findViewById(R.id.activity_main))
+        if (item?.itemId == R.id.action_settings) {
+            findPlace()
         }
         return false
     }
 
-    fun changeCity(city: String) {
+    private fun changeCity(city: String) {
+        val preferences: SharedPreferences = this.getPreferences(Activity.MODE_PRIVATE)
 
-        val cityPreferences = CityPreferences(this)
+        val cityPreferences = CityPreferences(preferences)
         cityPreferences.setCity(city)
 
         val refresh = Intent(this, MainActivity::class.java)
-        startActivity(refresh)//Start the same Activity
+        startActivity(refresh) //Start the same Activity
         finish()
     }
 
-    fun findPlace(view: View) {
+    private fun findPlace() {
         try {
-            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this@MainActivity)
-            startActivityForResult(intent, 1)
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra("flag", "add")
-        } catch (e: GooglePlayServicesRepairableException) {
-            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG).show()
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG).show()
-            // TODO: Handle the error.
+            val fields = listOf(Place.Field.ID, Place.Field.NAME)
+
+            // Start the autocomplete intent.
+            val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(this)
+            startForResult?.launch(intent)
+        } catch (ex:Exception) {
+            Toast.makeText(this@MainActivity, ex.toString(), Toast.LENGTH_LONG).show()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        // Initialize Places.
+        Places.initialize(this, "YOUR_API_KEY");
+
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == 1) {
+                when (result.resultCode) {
+                    Activity.RESULT_OK -> {
+                        result.data?.let {
+                            val place = Autocomplete.getPlaceFromIntent(it)
+                            changeCity(place.name.toString())
+                        }
+
+                    }
+                    AutocompleteActivity.RESULT_ERROR -> {
+                        result.data?.let {
+                            val status = Autocomplete.getStatusFromIntent(it)
+                            // TODO: Handle the error.
+                            Log.e("Tag", status.statusMessage)
+                        }
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        // The user canceled the operation.
+                        Toast.makeText(this@MainActivity, "User canceled operation", Toast.LENGTH_LONG).show()
+                    }
+                }
+                return@registerForActivityResult
+            }
+        }
+
         val weatherFragment = WeatherFragment()
-        val detailFragment = DetailFragment()
+        val detailFragment = WeatherDetailsFragment()
         if (savedInstanceState == null) {
-            val ft : FragmentTransaction = supportFragmentManager.beginTransaction()
+            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
             ft.add(R.id.fragment1, weatherFragment)
             ft.add(R.id.fragment2, detailFragment)
             ft.commit()
         }
-        val swipeRefreshLayout = findViewById(R.id.activity_main) as SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
             val refresh = Intent(this@MainActivity, MainActivity::class.java)
             refresh.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -72,23 +111,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(refresh)
             finish()
             overridePendingTransition(0, 0)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                val place = PlaceAutocomplete.getPlace(this, data)
-                changeCity(place.name.toString())
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                val status = PlaceAutocomplete.getStatus(this, data)
-                // TODO: Handle the error.
-                Log.e("Tag", status.statusMessage)
-
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
-                Toast.makeText(this@MainActivity, "User canceled operation", Toast.LENGTH_LONG).show()
-            }
         }
     }
 }

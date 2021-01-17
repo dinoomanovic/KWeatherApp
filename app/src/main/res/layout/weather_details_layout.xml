@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="50"
+    android:orientation="vertical"
+    android:weightSum="50">
+
+    <ImageView
+        android:id="@+id/imageDay1"
+        android:layout_width="125sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textDay1"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toStartOf="@id/textDay2"
+        app:layout_constraintStart_toStartOf="@id/textDay1"
+        app:layout_constraintTop_toBottomOf="@id/textDay1" />
+
+    <ImageView
+        android:id="@+id/imageDay2"
+        android:layout_width="125sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toStartOf="@id/textDay3"
+        app:layout_constraintStart_toEndOf="@id/textDay1"
+        app:layout_constraintTop_toBottomOf="@id/textDay2" />
+
+    <ImageView
+        android:id="@+id/imageDay3"
+        android:layout_width="125sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="@id/textDay3"
+        app:layout_constraintStart_toEndOf="@id/textDay2"
+        app:layout_constraintTop_toBottomOf="@id/textDay3" />
+
+    <TextView
+        android:id="@+id/detailText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:text=""
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textDay1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/textDay2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailText" />
+
+    <TextView
+        android:id="@+id/dayTemp1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/textDay2"
+        app:layout_constraintStart_toStartOf="@id/textDay1"
+        app:layout_constraintTop_toBottomOf="@id/imageDay1" />
+
+    <TextView
+        android:id="@+id/textDay2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toStartOf="@id/textDay3"
+        app:layout_constraintStart_toEndOf="@id/textDay1"
+        app:layout_constraintTop_toBottomOf="@id/detailText" />
+
+    <TextView
+        android:id="@+id/dayTemp2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toStartOf="@id/textDay3"
+        app:layout_constraintStart_toEndOf="@id/textDay1"
+        app:layout_constraintTop_toBottomOf="@id/imageDay2" />
+
+    <TextView
+        android:id="@+id/textDay3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textDay2"
+        app:layout_constraintTop_toBottomOf="@id/detailText" />
+
+    <TextView
+        android:id="@+id/dayTemp3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="@id/textDay3"
+        app:layout_constraintStart_toEndOf="@id/textDay2"
+        app:layout_constraintTop_toBottomOf="@id/imageDay3" />
+</androidx.constraintlayout.widget.ConstraintLayout>
